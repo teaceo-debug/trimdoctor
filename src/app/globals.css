@@ -123,13 +123,17 @@ body::after {
 /* ─── Scroll-triggered Animations ─────────────────────── */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .animate-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+/* Fallback: ensure elements become visible even if JS observer doesn't fire */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll { opacity: 1; transform: none; }
 }
 
 /* Staggered delays for children */
