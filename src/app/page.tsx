@@ -4,6 +4,7 @@ import Pricing from "@/components/marketing/Pricing";
 import {
   SocialProof,
   HowItWorks,
+  MarqueeTicker,
   Testimonials,
   FAQ,
   CTASection,
@@ -18,6 +19,7 @@ export default function Home() {
       <SocialProof />
       <HowItWorks />
       <Pricing />
+      <MarqueeTicker />
       <Testimonials />
       <FAQ />
       <CTASection />

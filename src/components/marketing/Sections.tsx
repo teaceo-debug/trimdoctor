@@ -41,6 +41,37 @@ function useScrollReveal() {
   return ref;
 }
 
+// ─── MARQUEE TICKER ─────────────────────────────────────
+const marqueeItems = [
+  "Affordable pricing",
+  "No hidden fees",
+  "Personalized to your needs",
+  "Ongoing support",
+  "FDA-regulated pharmacies",
+  "Unlimited provider messaging",
+  "Free shipping",
+  "Cancel anytime",
+];
+
+export function MarqueeTicker() {
+  return (
+    <section className="py-4 bg-[#F5F0E8] overflow-hidden">
+      <div className="marquee-track">
+        <div className="marquee-inner">
+          {[...marqueeItems, ...marqueeItems].map((item, i) => (
+            <span key={i} className="flex items-center gap-4 shrink-0">
+              <span className="w-[6px] h-[6px] rounded-full bg-[#1B4332]" />
+              <span className="text-[14px] font-semibold text-[#1B4332]/80 tracking-wide whitespace-nowrap">
+                {item}
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── SOCIAL PROOF BAR ────────────────────────────────────
 export function SocialProof() {
   return (

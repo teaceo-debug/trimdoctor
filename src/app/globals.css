@@ -237,6 +237,33 @@ body::after {
   overflow: hidden;
 }
 
+/* ─── Marquee Ticker ─────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  width: 100%;
+}
+.marquee-inner {
+  display: flex;
+  gap: 32px;
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── Bento Card ─────────────────────────────────────── */
+.bento-card {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+.bento-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
 /* ─── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .btn-primary {
