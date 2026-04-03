@@ -80,7 +80,7 @@ export function SocialProof() {
         <span className="text-[11px] font-semibold text-[#8A8A8A] tracking-[2px] uppercase">
           As seen in
         </span>
-        {["Forbes Health", "Healthline", "GQ", "Women&apos;s Health", "USA Today"].map(
+        {["Forbes Health", "Healthline", "GQ", "Women\u2019s Health", "USA Today"].map(
           (pub, i) => (
             <span
               key={i}
