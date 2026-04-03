@@ -87,3 +87,4 @@ Install the Claude Code VS Code extension, then run `claude` in terminal:
 ```
 
 © 2026 TrimDoctor, LLC — Proprietary
+
