@@ -1,5 +1,11 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import {
+  Send,
+  Phone,
+  Info,
+  ShieldCheck,
+} from "lucide-react";
 
 const INITIAL_MESSAGES = [
   { from: "provider", text: "Great progress, Michael! Your weight loss is right on track. I'm recommending we increase your dose to 1.0mg. Let me know if you have questions.", time: "Mar 28, 2:15 PM" },
@@ -11,70 +17,137 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const send = () => {
     if (!input.trim()) return;
     setMessages(prev => [...prev, { from: "patient", text: input.trim(), time: "Just now" }]);
     setInput("");
+    inputRef.current?.focus();
     setTimeout(() => {
-      setMessages(prev => [...prev, { from: "provider", text: "Thanks for your message! I'll review and get back to you within a few hours. If urgent, call (323) 690-1564.", time: "Just now" }]);
+      setMessages(prev => [...prev, {
+        from: "provider",
+        text: "Thanks for your message! I'll review and get back to you within a few hours. If urgent, call (323) 690-1564.",
+        time: "Just now"
+      }]);
     }, 1500);
   };
 
-  return (
-    <div>
-      <h1 className="text-2xl font-extrabold text-gray-900 mb-1">Messages</h1>
-      <p className="text-sm text-gray-500 mb-6">Direct messaging with Dr. Sarah Williams, MD</p>
+  // Group messages by date
+  const getDateGroup = (time: string) => {
+    if (time === "Just now") return "Today";
+    if (time.includes("Mar 28")) return "March 28, 2026";
+    return time.split(",")[0];
+  };
 
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center">👩‍⚕️</div>
-          <div>
-            <div className="font-bold text-sm text-gray-900">Dr. Sarah Williams, MD</div>
-            <div className="text-xs text-gray-400">Internal Medicine — Board Certified</div>
+  let lastGroup = "";
+
+  return (
+    <div className="animate-fade-up">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A] tracking-tight mb-1">Messages</h1>
+        <p className="text-sm text-[#8A8A8A]">Secure messaging with your care team</p>
+      </div>
+
+      {/* Chat container */}
+      <div className="bg-white rounded-2xl border border-[#E8E2D6] overflow-hidden shadow-sm">
+        {/* Provider header */}
+        <div className="px-5 sm:px-6 py-4 border-b border-[#E8E2D6] flex items-center gap-3">
+          <div className="relative">
+            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#D8F3DC] to-[#95D5B2] flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5 text-[#1B4332]" />
+            </div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-400 border-2 border-white" />
           </div>
-          <div className="ml-auto flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-green-400" />
-            <span className="text-xs text-green-500">Available</span>
+          <div className="flex-1 min-w-0">
+            <div className="font-bold text-sm text-[#1A1A1A]">Dr. Sarah Williams, MD</div>
+            <div className="text-xs text-[#8A8A8A]">Internal Medicine — Board Certified</div>
+          </div>
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              Available
+            </div>
           </div>
         </div>
 
-        {/* Messages */}
-        <div className="h-[420px] overflow-y-auto p-6 bg-gray-50 space-y-4">
-          {messages.map((m, i) => (
-            <div key={i} className={`flex flex-col ${m.from === "patient" ? "items-end" : "items-start"}`}>
-              <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                m.from === "patient"
-                  ? "bg-brand-500 text-white rounded-br-sm"
-                  : "bg-white border border-gray-200 text-gray-700 rounded-bl-sm"
-              }`}>
-                {m.text}
+        {/* Messages area */}
+        <div className="h-[440px] overflow-y-auto p-5 sm:p-6 bg-[#FBF8F3] space-y-1">
+          {messages.map((m, i) => {
+            const group = getDateGroup(m.time);
+            const showGroup = group !== lastGroup;
+            lastGroup = group;
+            const isPatient = m.from === "patient";
+
+            return (
+              <div key={i}>
+                {showGroup && (
+                  <div className="flex items-center justify-center py-3">
+                    <span className="text-[10px] font-semibold text-[#8A8A8A] bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full border border-[#E8E2D6]/50">
+                      {group}
+                    </span>
+                  </div>
+                )}
+                <div className={`flex flex-col ${isPatient ? "items-end" : "items-start"} mb-3`}>
+                  <div
+                    className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 text-[13.5px] leading-relaxed ${
+                      isPatient
+                        ? "bg-[#1B4332] text-white rounded-2xl rounded-br-md shadow-sm"
+                        : "bg-white border border-[#E8E2D6] text-[#1A1A1A] rounded-2xl rounded-bl-md shadow-sm"
+                    }`}
+                  >
+                    {!isPatient && (
+                      <div className="text-[10px] font-bold text-[#2D6A4F] mb-1.5 uppercase tracking-wide">Dr. Williams</div>
+                    )}
+                    {m.text}
+                  </div>
+                  <span className="text-[10px] text-[#8A8A8A] mt-1 px-1">{m.time}</span>
+                </div>
               </div>
-              <span className="text-[10px] text-gray-400 mt-1 px-1">{m.time}</span>
-            </div>
-          ))}
+            );
+          })}
           <div ref={endRef} />
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-gray-200 flex gap-3">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && send()}
-            placeholder="Type a message to your provider..."
-            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-500"
-          />
-          <button onClick={send} className="btn-primary px-6 py-3 text-sm">Send</button>
+        <div className="p-3 sm:p-4 border-t border-[#E8E2D6] bg-white">
+          <div className="flex gap-2 sm:gap-3">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && send()}
+              placeholder="Type a message to your provider..."
+              className="flex-1 px-4 py-3 border border-[#E8E2D6] rounded-xl text-sm outline-none focus:border-[#95D5B2] focus:ring-2 focus:ring-[#D8F3DC]/50 transition-all bg-[#FBF8F3] placeholder:text-[#8A8A8A]"
+            />
+            <button
+              onClick={send}
+              disabled={!input.trim()}
+              className="px-4 sm:px-5 py-3 bg-[#1B4332] hover:bg-[#2D6A4F] disabled:bg-[#E8E2D6] disabled:cursor-not-allowed text-white rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              <span className="hidden sm:inline">Send</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-100 text-sm text-blue-600 flex gap-2">
-        <span>ℹ️</span>
-        For emergencies call 911. For urgent questions call (323) 690-1564. Messages answered within 2-4 hours.
+      {/* Info banner */}
+      <div className="mt-4 p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-sm text-blue-700 flex items-start gap-3">
+        <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+        <div>
+          <span className="font-semibold">Response times:</span> Messages are typically answered within 2-4 hours during business hours.
+          For emergencies, call 911. For urgent questions, call{" "}
+          <a href="tel:3236901564" className="font-semibold underline underline-offset-2 inline-flex items-center gap-1">
+            <Phone className="w-3 h-3" />
+            (323) 690-1564
+          </a>
+        </div>
       </div>
     </div>
   );
